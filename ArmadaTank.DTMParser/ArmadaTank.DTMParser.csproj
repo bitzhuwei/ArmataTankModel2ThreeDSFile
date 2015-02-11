@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0FBEEC85-46CB-40AA-A26A-8551CDDC3788}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ArmadaTank.DTMParser</RootNamespace>
+    <AssemblyName>ArmadaTank.DTMParser</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="bitzhuwei.CompilerBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\bitzhuwei.CompilerBase.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="EnumCharTypeDTM.cs" />
+    <Compile Include="EnumTokenTypeDTM.cs" />
+    <Compile Include="EnumVTypeDTM.cs" />
+    <Compile Include="LexicalAnalyzerDTM.cs" />
+    <Compile Include="LL1SyntaxParserDTM.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Result\DTM.cs" />
+    <Compile Include="Result\Block.cs" />
+    <Compile Include="Result\BlockList.cs" />
+    <Compile Include="Result\Face.cs" />
+    <Compile Include="Result\FaceList.cs" />
+    <Compile Include="Result\Faces.cs" />
+    <Compile Include="Result\FacesCount.cs" />
+    <Compile Include="Result\FileContent.cs" />
+    <Compile Include="Result\FileDesc.cs" />
+    <Compile Include="Result\FileDescItem.cs" />
+    <Compile Include="Result\FileDescItemList.cs" />
+    <Compile Include="Result\Frame.cs" />
+    <Compile Include="Result\FrameContentItem.cs" />
+    <Compile Include="Result\FrameContentItemList.cs" />
+    <Compile Include="Result\FramesCount.cs" />
+    <Compile Include="Result\MapChannel.cs" />
+    <Compile Include="Result\MapCount.cs" />
+    <Compile Include="Result\SyntaxTreeDTM.cs" />
+    <Compile Include="Result\Texture.cs" />
+    <Compile Include="Result\TextureFaces.cs" />
+    <Compile Include="Result\TextureList.cs" />
+    <Compile Include="Result\TextureVertices.cs" />
+    <Compile Include="Result\TFace.cs" />
+    <Compile Include="Result\TFaceList.cs" />
+    <Compile Include="Result\TVertex.cs" />
+    <Compile Include="Result\TVertexList.cs" />
+    <Compile Include="Result\Vertex.cs" />
+    <Compile Include="Result\Vertices.cs" />
+    <Compile Include="Result\VerticesCount.cs" />
+    <Compile Include="SyntaxTreeNodeValueDTM.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ArmadaTanksModel.txt" />
+    <Content Include="ArmadaTanksModel.xml" />
+    <Content Include="ArmadaTank.DTMParser readme.txt" />
+    <Content Include="bitzhuwei.CompilerBase.dll" />
+    <Content Include="bitzhuwei.CompilerBase.pdb" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

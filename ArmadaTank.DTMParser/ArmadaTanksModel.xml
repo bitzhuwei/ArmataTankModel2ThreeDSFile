@@ -1,0 +1,346 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContextfreeGrammar GrammarName="ArmadaTanksModel" Namespace="bitzhuwei.ArmadaTanksModelCompiler">
+  <source_code_of_CGCompiler>Name:ArmadaTanksModel
+&lt;ArmadaTanksModel&gt; ::= "File" &lt;FileContent&gt; "endfile";
+&lt;FileContent&gt; ::= "{" &lt;BlockList&gt; "}";
+&lt;BlockList&gt; ::= &lt;Block&gt; &lt;BlockList&gt; | null;
+&lt;Block&gt; ::= "FileDesc" &lt;FileDesc&gt; "endfiledesc" | "Faces" &lt;Faces&gt; | "MapChannel" &lt;SignedNumber&gt; &lt;MapChannel&gt; | "Frame" &lt;SignedNumber&gt; &lt;Frame&gt; "endframe";
+&lt;FileDesc&gt; ::= "{" &lt;FileDescItemList&gt; "}";
+&lt;FileDescItemList&gt; ::= &lt;FileDescItem&gt; &lt;FileDescItemList&gt; | null;
+&lt;FileDescItem&gt; ::= "Frames" &lt;SignedNumber&gt; | "Vertices" &lt;SignedNumber&gt; | "Faces" &lt;SignedNumber&gt; | "Map" &lt;SignedNumber&gt; "TVertices" &lt;SignedNumber&gt;;
+&lt;Faces&gt; ::= "{" &lt;FaceList&gt; "}";
+&lt;FaceList&gt; ::= &lt;Face&gt; &lt;FaceList&gt; | null;
+&lt;Face&gt; ::= "Face" &lt;SignedNumber&gt; &lt;SignedNumber&gt; &lt;SignedNumber&gt; &lt;SignedNumber&gt; "MatID" &lt;SignedNumber&gt;;
+&lt;MapChannel&gt; ::= "{" &lt;TextureList&gt; "}";
+&lt;TextureList&gt; ::= &lt;Texture&gt; &lt;TextureList&gt; | null;
+&lt;Texture&gt; ::= "TextureVertices" &lt;TextureVertices&gt; | "TextureFaces" &lt;TextureFaces&gt;;
+&lt;TextureVertices&gt; ::= "{" &lt;TVertexList&gt; "}";
+&lt;TVertexList&gt; ::= &lt;TVertex&gt; &lt;TVertexList&gt; | null;
+&lt;TVertex&gt; ::= "TVertex" &lt;SignedNumber&gt; &lt;SignedNumber&gt; &lt;SignedNumber&gt; &lt;SignedNumber&gt;;
+&lt;TextureFaces&gt; ::= "{" &lt;TFaceList&gt; "}";
+&lt;TFaceList&gt; ::= &lt;TFace&gt; &lt;TFaceList&gt; | null;
+&lt;TFace&gt; ::= "TFace" &lt;SignedNumber&gt; &lt;SignedNumber&gt; &lt;SignedNumber&gt; &lt;SignedNumber&gt;;
+&lt;Frame&gt; ::= "{" &lt;FrameContentItemList&gt; "}";
+&lt;FrameContentItemList&gt; ::= &lt;FrameContentItem&gt; &lt;FrameContentItemList&gt; | null;
+&lt;FrameContentItem&gt; ::= "Vertices" "{" &lt;Vertices&gt; "}";
+&lt;Vertices&gt; ::= &lt;Vertex&gt; &lt;Vertices&gt; | null;
+&lt;Vertex&gt; ::= "Vertex" &lt;SignedNumber&gt; &lt;SignedNumber&gt; &lt;SignedNumber&gt; &lt;SignedNumber&gt;;
+&lt;SignedNumber&gt; ::= "+" number | "-" number | number;
+</source_code_of_CGCompiler>
+  <ContextfreeProductionList Count="25">
+    <ContextfreeProduction>
+      <ProductionNode NodeName="ArmadaTanksModel" NodeNote="ArmadaTanksModel" Position="NonLeave" />
+      <RightSection CandidateCount="1">
+        <ProductionNodeList NodeCount="3">
+          <ProductionNode NodeName="&quot;File&quot;" NodeNote="&quot;File&quot;" Position="Leave" />
+          <ProductionNode NodeName="FileContent" NodeNote="FileContent" Position="NonLeave" />
+          <ProductionNode NodeName="&quot;endfile&quot;" NodeNote="&quot;endfile&quot;" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="FileContent" NodeNote="FileContent" Position="NonLeave" />
+      <RightSection CandidateCount="1">
+        <ProductionNodeList NodeCount="3">
+          <ProductionNode NodeName="&quot;{&quot;" NodeNote="&quot;{&quot;" Position="Leave" />
+          <ProductionNode NodeName="BlockList" NodeNote="BlockList" Position="NonLeave" />
+          <ProductionNode NodeName="&quot;}&quot;" NodeNote="&quot;}&quot;" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="BlockList" NodeNote="BlockList" Position="NonLeave" />
+      <RightSection CandidateCount="2">
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="Block" NodeNote="Block" Position="NonLeave" />
+          <ProductionNode NodeName="BlockList" NodeNote="BlockList" Position="NonLeave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="1">
+          <ProductionNode NodeName="null" NodeNote="null" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="Block" NodeNote="Block" Position="NonLeave" />
+      <RightSection CandidateCount="4">
+        <ProductionNodeList NodeCount="3">
+          <ProductionNode NodeName="&quot;FileDesc&quot;" NodeNote="&quot;FileDesc&quot;" Position="Leave" />
+          <ProductionNode NodeName="FileDesc" NodeNote="FileDesc" Position="NonLeave" />
+          <ProductionNode NodeName="&quot;endfiledesc&quot;" NodeNote="&quot;endfiledesc&quot;" Position="Leave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="&quot;Faces&quot;" NodeNote="&quot;Faces&quot;" Position="Leave" />
+          <ProductionNode NodeName="Faces" NodeNote="Faces" Position="NonLeave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="3">
+          <ProductionNode NodeName="&quot;MapChannel&quot;" NodeNote="&quot;MapChannel&quot;" Position="Leave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="MapChannel" NodeNote="MapChannel" Position="NonLeave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="4">
+          <ProductionNode NodeName="&quot;Frame&quot;" NodeNote="&quot;Frame&quot;" Position="Leave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="Frame" NodeNote="Frame" Position="NonLeave" />
+          <ProductionNode NodeName="&quot;endframe&quot;" NodeNote="&quot;endframe&quot;" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="FileDesc" NodeNote="FileDesc" Position="NonLeave" />
+      <RightSection CandidateCount="1">
+        <ProductionNodeList NodeCount="3">
+          <ProductionNode NodeName="&quot;{&quot;" NodeNote="&quot;{&quot;" Position="Leave" />
+          <ProductionNode NodeName="FileDescItemList" NodeNote="FileDescItemList" Position="NonLeave" />
+          <ProductionNode NodeName="&quot;}&quot;" NodeNote="&quot;}&quot;" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="FileDescItemList" NodeNote="FileDescItemList" Position="NonLeave" />
+      <RightSection CandidateCount="2">
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="FileDescItem" NodeNote="FileDescItem" Position="NonLeave" />
+          <ProductionNode NodeName="FileDescItemList" NodeNote="FileDescItemList" Position="NonLeave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="1">
+          <ProductionNode NodeName="null" NodeNote="null" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="FileDescItem" NodeNote="FileDescItem" Position="NonLeave" />
+      <RightSection CandidateCount="4">
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="&quot;Frames&quot;" NodeNote="&quot;Frames&quot;" Position="Leave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="&quot;Vertices&quot;" NodeNote="&quot;Vertices&quot;" Position="Leave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="&quot;Faces&quot;" NodeNote="&quot;Faces&quot;" Position="Leave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="4">
+          <ProductionNode NodeName="&quot;Map&quot;" NodeNote="&quot;Map&quot;" Position="Leave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="&quot;TVertices&quot;" NodeNote="&quot;TVertices&quot;" Position="Leave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="Faces" NodeNote="Faces" Position="NonLeave" />
+      <RightSection CandidateCount="1">
+        <ProductionNodeList NodeCount="3">
+          <ProductionNode NodeName="&quot;{&quot;" NodeNote="&quot;{&quot;" Position="Leave" />
+          <ProductionNode NodeName="FaceList" NodeNote="FaceList" Position="NonLeave" />
+          <ProductionNode NodeName="&quot;}&quot;" NodeNote="&quot;}&quot;" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="FaceList" NodeNote="FaceList" Position="NonLeave" />
+      <RightSection CandidateCount="2">
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="Face" NodeNote="Face" Position="NonLeave" />
+          <ProductionNode NodeName="FaceList" NodeNote="FaceList" Position="NonLeave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="1">
+          <ProductionNode NodeName="null" NodeNote="null" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="Face" NodeNote="Face" Position="NonLeave" />
+      <RightSection CandidateCount="1">
+        <ProductionNodeList NodeCount="7">
+          <ProductionNode NodeName="&quot;Face&quot;" NodeNote="&quot;Face&quot;" Position="Leave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="&quot;MatID&quot;" NodeNote="&quot;MatID&quot;" Position="Leave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="MapChannel" NodeNote="MapChannel" Position="NonLeave" />
+      <RightSection CandidateCount="1">
+        <ProductionNodeList NodeCount="3">
+          <ProductionNode NodeName="&quot;{&quot;" NodeNote="&quot;{&quot;" Position="Leave" />
+          <ProductionNode NodeName="TextureList" NodeNote="TextureList" Position="NonLeave" />
+          <ProductionNode NodeName="&quot;}&quot;" NodeNote="&quot;}&quot;" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="TextureList" NodeNote="TextureList" Position="NonLeave" />
+      <RightSection CandidateCount="2">
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="Texture" NodeNote="Texture" Position="NonLeave" />
+          <ProductionNode NodeName="TextureList" NodeNote="TextureList" Position="NonLeave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="1">
+          <ProductionNode NodeName="null" NodeNote="null" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="Texture" NodeNote="Texture" Position="NonLeave" />
+      <RightSection CandidateCount="2">
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="&quot;TextureVertices&quot;" NodeNote="&quot;TextureVertices&quot;" Position="Leave" />
+          <ProductionNode NodeName="TextureVertices" NodeNote="TextureVertices" Position="NonLeave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="&quot;TextureFaces&quot;" NodeNote="&quot;TextureFaces&quot;" Position="Leave" />
+          <ProductionNode NodeName="TextureFaces" NodeNote="TextureFaces" Position="NonLeave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="TextureVertices" NodeNote="TextureVertices" Position="NonLeave" />
+      <RightSection CandidateCount="1">
+        <ProductionNodeList NodeCount="3">
+          <ProductionNode NodeName="&quot;{&quot;" NodeNote="&quot;{&quot;" Position="Leave" />
+          <ProductionNode NodeName="TVertexList" NodeNote="TVertexList" Position="NonLeave" />
+          <ProductionNode NodeName="&quot;}&quot;" NodeNote="&quot;}&quot;" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="TVertexList" NodeNote="TVertexList" Position="NonLeave" />
+      <RightSection CandidateCount="2">
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="TVertex" NodeNote="TVertex" Position="NonLeave" />
+          <ProductionNode NodeName="TVertexList" NodeNote="TVertexList" Position="NonLeave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="1">
+          <ProductionNode NodeName="null" NodeNote="null" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="TVertex" NodeNote="TVertex" Position="NonLeave" />
+      <RightSection CandidateCount="1">
+        <ProductionNodeList NodeCount="5">
+          <ProductionNode NodeName="&quot;TVertex&quot;" NodeNote="&quot;TVertex&quot;" Position="Leave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="TextureFaces" NodeNote="TextureFaces" Position="NonLeave" />
+      <RightSection CandidateCount="1">
+        <ProductionNodeList NodeCount="3">
+          <ProductionNode NodeName="&quot;{&quot;" NodeNote="&quot;{&quot;" Position="Leave" />
+          <ProductionNode NodeName="TFaceList" NodeNote="TFaceList" Position="NonLeave" />
+          <ProductionNode NodeName="&quot;}&quot;" NodeNote="&quot;}&quot;" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="TFaceList" NodeNote="TFaceList" Position="NonLeave" />
+      <RightSection CandidateCount="2">
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="TFace" NodeNote="TFace" Position="NonLeave" />
+          <ProductionNode NodeName="TFaceList" NodeNote="TFaceList" Position="NonLeave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="1">
+          <ProductionNode NodeName="null" NodeNote="null" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="TFace" NodeNote="TFace" Position="NonLeave" />
+      <RightSection CandidateCount="1">
+        <ProductionNodeList NodeCount="5">
+          <ProductionNode NodeName="&quot;TFace&quot;" NodeNote="&quot;TFace&quot;" Position="Leave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="Frame" NodeNote="Frame" Position="NonLeave" />
+      <RightSection CandidateCount="1">
+        <ProductionNodeList NodeCount="3">
+          <ProductionNode NodeName="&quot;{&quot;" NodeNote="&quot;{&quot;" Position="Leave" />
+          <ProductionNode NodeName="FrameContentItemList" NodeNote="FrameContentItemList" Position="NonLeave" />
+          <ProductionNode NodeName="&quot;}&quot;" NodeNote="&quot;}&quot;" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="FrameContentItemList" NodeNote="FrameContentItemList" Position="NonLeave" />
+      <RightSection CandidateCount="2">
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="FrameContentItem" NodeNote="FrameContentItem" Position="NonLeave" />
+          <ProductionNode NodeName="FrameContentItemList" NodeNote="FrameContentItemList" Position="NonLeave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="1">
+          <ProductionNode NodeName="null" NodeNote="null" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="FrameContentItem" NodeNote="FrameContentItem" Position="NonLeave" />
+      <RightSection CandidateCount="1">
+        <ProductionNodeList NodeCount="4">
+          <ProductionNode NodeName="&quot;Vertices&quot;" NodeNote="&quot;Vertices&quot;" Position="Leave" />
+          <ProductionNode NodeName="&quot;{&quot;" NodeNote="&quot;{&quot;" Position="Leave" />
+          <ProductionNode NodeName="Vertices" NodeNote="Vertices" Position="NonLeave" />
+          <ProductionNode NodeName="&quot;}&quot;" NodeNote="&quot;}&quot;" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="Vertices" NodeNote="Vertices" Position="NonLeave" />
+      <RightSection CandidateCount="2">
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="Vertex" NodeNote="Vertex" Position="NonLeave" />
+          <ProductionNode NodeName="Vertices" NodeNote="Vertices" Position="NonLeave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="1">
+          <ProductionNode NodeName="null" NodeNote="null" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="Vertex" NodeNote="Vertex" Position="NonLeave" />
+      <RightSection CandidateCount="1">
+        <ProductionNodeList NodeCount="5">
+          <ProductionNode NodeName="&quot;Vertex&quot;" NodeNote="&quot;Vertex&quot;" Position="Leave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+          <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+    <ContextfreeProduction>
+      <ProductionNode NodeName="SignedNumber" NodeNote="SignedNumber" Position="NonLeave" />
+      <RightSection CandidateCount="3">
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="&quot;+&quot;" NodeNote="&quot;+&quot;" Position="Leave" />
+          <ProductionNode NodeName="number" NodeNote="number" Position="Leave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="2">
+          <ProductionNode NodeName="&quot;-&quot;" NodeNote="&quot;-&quot;" Position="Leave" />
+          <ProductionNode NodeName="number" NodeNote="number" Position="Leave" />
+        </ProductionNodeList>
+        <ProductionNodeList NodeCount="1">
+          <ProductionNode NodeName="number" NodeNote="number" Position="Leave" />
+        </ProductionNodeList>
+      </RightSection>
+    </ContextfreeProduction>
+  </ContextfreeProductionList>
+</ContextfreeGrammar>

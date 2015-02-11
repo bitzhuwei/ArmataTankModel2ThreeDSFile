@@ -1,0 +1,26 @@
+Name:ArmadaTanksModel
+<ArmadaTanksModel> ::= "File" <FileContent> "endfile";
+<FileContent> ::= "{" <BlockList> "}";
+<BlockList> ::= <Block> <BlockList> | null;
+<Block> ::= "FileDesc" <FileDesc> "endfiledesc" | "Faces" <Faces> | "MapChannel" <SignedNumber> <MapChannel> | "Frame" <SignedNumber> <Frame> "endframe";
+<FileDesc> ::= "{" <FileDescItemList> "}";
+<FileDescItemList> ::= <FileDescItem> <FileDescItemList> | null;
+<FileDescItem> ::= "Frames" <SignedNumber> | "Vertices" <SignedNumber> | "Faces" <SignedNumber> | "Map" <SignedNumber> "TVertices" <SignedNumber>;
+<Faces> ::= "{" <FaceList> "}";
+<FaceList> ::= <Face> <FaceList> | null;
+<Face> ::= "Face" <SignedNumber> <SignedNumber> <SignedNumber> <SignedNumber> "MatID" <SignedNumber>;
+<MapChannel> ::= "{" <TextureList> "}";
+<TextureList> ::= <Texture> <TextureList> | null;
+<Texture> ::= "TextureVertices" <TextureVertices> | "TextureFaces" <TextureFaces>;
+<TextureVertices> ::= "{" <TVertexList> "}";
+<TVertexList> ::= <TVertex> <TVertexList> | null;
+<TVertex> ::= "TVertex" <SignedNumber> <SignedNumber> <SignedNumber> <SignedNumber>;
+<TextureFaces> ::= "{" <TFaceList> "}";
+<TFaceList> ::= <TFace> <TFaceList> | null;
+<TFace> ::= "TFace" <SignedNumber> <SignedNumber> <SignedNumber> <SignedNumber>;
+<Frame> ::= "{" <FrameContentItemList> "}";
+<FrameContentItemList> ::= <FrameContentItem> <FrameContentItemList> | null;
+<FrameContentItem> ::= "Vertices" "{" <Vertices> "}";
+<Vertices> ::= <Vertex> <Vertices> | null;
+<Vertex> ::= "Vertex" <SignedNumber> <SignedNumber> <SignedNumber> <SignedNumber>;
+<SignedNumber> ::= "+" number | "-" number | number;
