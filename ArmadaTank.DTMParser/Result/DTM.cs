@@ -30,9 +30,9 @@ namespace ArmadaTank.DTMParser.Result
                 if (frameBlock != null)
                 {
                     frame = frameBlock.frameContentItemListObj.Count;
-                    foreach (var frameContentItemList in frameBlock.frameContentItemListObj)
+                    foreach (var frameContentItem in frameBlock.frameContentItemListObj)
                     {
-                        var verticesObj = frameContentItemList.verticesObj;
+                        var verticesObj = frameContentItem.verticesObj;
                         vertices = verticesObj.Count;
                         result.Add(verticesObj);
                     }

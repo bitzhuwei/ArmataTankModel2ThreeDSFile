@@ -7,10 +7,11 @@
     <ProjectGuid>{A6BCD6BB-F004-47A7-9632-88FE2E3EC6E0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ArmadaTank2ThreedDS</RootNamespace>
-    <AssemblyName>ArmadaTank2ThreedDS</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>ArmadaTank2ThreeDS</RootNamespace>
+    <AssemblyName>ArmadaTank2ThreeDS</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="bitzhuwei.CompilerBase">
+      <HintPath>..\ArmadaTank.DTMParser\bitzhuwei.CompilerBase.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -39,8 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="DTM23DSParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ThreeDSContent.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ArmadaTank.DTMParser\ArmadaTank.DTMParser.csproj">

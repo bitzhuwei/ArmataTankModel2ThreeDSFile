@@ -4,36 +4,37 @@ using System.Text;
 using System.Collections.Generic;
 
 using System.Drawing;
+using System.Xml.Linq;
 
 namespace bitzhuwei._3DS
 {
+    public enum ChunkType
+    {
+        MainChunk = 0x4D4D,
+        _3DEditorChunk = 0x3D3D,
+        CVersion = 0x0002,
+        KeyFramerChunk = 0xB000,
+        MaterialBlock = 0xAFFF,
+        MaterialName = 0xA000,
+        AmbientColor = 0xA010,
+        DiffuseColor = 0xA020,
+        SpecularColor = 0xA030,
+        C_MATSHININESS = 0xA040,
+        TextureMap = 0xA200,
+        MappingFilename = 0xA300,
+        ObjectBlock = 0x4000,
+        TriangularMesh = 0x4100,
+        VerticesList = 0x4110,
+        FacesDescription = 0x4120,
+        FacesMaterial = 0x4130,
+        /// <summary>
+        /// UV
+        /// </summary>
+        MappingCoordinatesList = 0x4140
+    }
     public class ThreeDSFile
     {
-        enum ChunkType
-        {
-            MainChunk = 0x4D4D,
-            _3DEditorChunk = 0x3D3D,
-            CVersion = 0x0002,
-            KeyFramerChunk = 0xB000,
-            MaterialBlock = 0xAFFF,
-            MaterialName = 0xA000,
-            AmbientColor = 0xA010,
-            DiffuseColor = 0xA020,
-            SpecularColor = 0xA030,
-            C_MATSHININESS = 0xA040,
-            TextureMap = 0xA200,
-            MappingFilename = 0xA300,
-            ObjectBlock = 0x4000,
-            TriangularMesh = 0x4100,
-            VerticesList = 0x4110,
-            FacesDescription = 0x4120,
-            FacesMaterial = 0x4130,
-            /// <summary>
-            /// UV
-            /// </summary>
-            MappingCoordinatesList = 0x4140
-        }
-
+ 
         class ThreeDSChunk
         {
             public ushort ID;
@@ -72,7 +73,7 @@ namespace bitzhuwei._3DS
 
         string base_dir;
 
-        public ThreeDSFile(string file_name)
+        public ThreeDSFile(string file_name, XElement root = null)
         {
             base_dir = new FileInfo(file_name).DirectoryName + "/";
 
@@ -86,17 +87,30 @@ namespace bitzhuwei._3DS
             if (chunk.ID != (short)ChunkType.MainChunk)
                 throw new Exception("Not a proper 3DS file.");
 
-            ProcessChunk(chunk);
+            if (root != null)
+            {
+                root.Name = "_" + ((ChunkType)(chunk.ID)).ToString();
+                root.Add(new XAttribute("Length", chunk.Length));
+            }
+
+            ProcessChunk(chunk, root);
 
             reader.Close();
             file.Close();
+
         }
-        void ProcessChunk(ThreeDSChunk chunk)
+
+        void ProcessChunk(ThreeDSChunk chunk, XElement chunkXml = null)
         {
             while (chunk.BytesRead < chunk.Length)
             {
                 ThreeDSChunk child = new ThreeDSChunk(reader);
-
+                XElement childXml = null;
+                if (chunkXml != null)
+                {
+                    childXml = new XElement("_" + ((ChunkType)child.ID).ToString(),
+                        new XAttribute("Length", child.Length));
+                }
                 switch ((ChunkType)child.ID)
                 {
                     case ChunkType.CVersion:
@@ -104,29 +118,26 @@ namespace bitzhuwei._3DS
                         int version = reader.ReadInt32();
                         child.BytesRead += 4;
 
+                        if (chunkXml != null)
+                        {
+                            childXml.Value = version.ToString();
+                        }
                         break;
 
                     case ChunkType._3DEditorChunk:
 
-                        ThreeDSChunk obj_chunk = new ThreeDSChunk(reader);
-
-                        // not sure whats up with this chunk
-                        SkipChunk(obj_chunk);
-                        child.BytesRead += obj_chunk.BytesRead;
-
-                        ProcessChunk(child);
-
+                        Process3DEditorChunk(child, childXml);
                         break;
 
                     case ChunkType.MaterialBlock:
 
-                        ProcessMaterialChunk(child);
+                        ProcessMaterialChunk(child, childXml);
                         break;
 
                     case ChunkType.ObjectBlock:
 
-                        string name = ProcessString(child);
-                        Entity e = ProcessObjectChunk(child);
+                        string name = ProcessString(child, childXml);
+                        Entity e = ProcessObjectChunk(child, childXml);
                         e.CalculateNormals();
                         model.Entities.Add(e);
 
@@ -134,16 +145,56 @@ namespace bitzhuwei._3DS
 
                     default:
 
-                        SkipChunk(child);
+                        SkipChunk(child, childXml);
                         break;
 
                 }
-
+                if (chunkXml != null)
+                {
+                    chunkXml.Add(childXml);
+                }
                 chunk.BytesRead += child.BytesRead;
             }
         }
 
-        void ProcessMaterialChunk(ThreeDSChunk chunk)
+        private void Process3DEditorChunk(ThreeDSChunk chunk, XElement chunkXml)
+        {
+            while (chunk.BytesRead < chunk.Length)
+            {
+                ThreeDSChunk child = new ThreeDSChunk(reader);
+                XElement childXml = null;
+                if (chunkXml != null)
+                {
+                    childXml = new XElement("_" + ((ChunkType)child.ID).ToString(),
+                        new XAttribute("Length", child.Length));
+                }
+                switch ((ChunkType)child.ID)
+                {
+                    case ChunkType.ObjectBlock:
+
+                        string name = ProcessString(child, childXml);
+                        Entity e = ProcessObjectChunk(child, childXml);
+                        e.CalculateNormals();
+                        model.Entities.Add(e);
+
+                        break;
+
+                    default:
+
+                        SkipChunk(child, childXml);
+                        break;
+
+                }
+                if (chunkXml != null)
+                {
+                    chunkXml.Add(childXml);
+                }
+                chunk.BytesRead += child.BytesRead;
+            }
+        }
+
+
+        void ProcessMaterialChunk(ThreeDSChunk chunk, XElement chunkXml)
         {
             string name = string.Empty;
             MaterialD3S m = new MaterialD3S();
@@ -151,64 +202,80 @@ namespace bitzhuwei._3DS
             while (chunk.BytesRead < chunk.Length)
             {
                 ThreeDSChunk child = new ThreeDSChunk(reader);
-
+                XElement childXml = null;
+                if (chunkXml != null)
+                {
+                    childXml = new XElement(
+                        "_" + ((ChunkType)child.ID).ToString(),
+                        new XAttribute("Length", child.Length)
+                        );
+                }
                 switch ((ChunkType)child.ID)
                 {
                     case ChunkType.MaterialName:
 
-                        name = ProcessString(child);
+                        name = ProcessString(child, childXml);
                         break;
 
                     case ChunkType.AmbientColor:
 
-                        m.Ambient = ProcessColorChunk(child);
+                        m.Ambient = ProcessColorChunk(child, childXml);
                         break;
 
                     case ChunkType.DiffuseColor:
 
-                        m.Diffuse = ProcessColorChunk(child);
+                        m.Diffuse = ProcessColorChunk(child, childXml);
                         break;
 
                     case ChunkType.SpecularColor:
 
-                        m.Specular = ProcessColorChunk(child);
+                        m.Specular = ProcessColorChunk(child, childXml);
                         break;
 
                     case ChunkType.C_MATSHININESS:
 
-                        m.Shininess = ProcessPercentageChunk(child);
+                        m.Shininess = ProcessPercentageChunk(child, childXml);
                         //Console.WriteLine ( "SHININESS: {0}", m.Shininess );
                         break;
 
                     case ChunkType.TextureMap:
 
-                        ProcessPercentageChunk(child);
+                        ProcessPercentageChunk(child, childXml);
 
                         //SkipChunk ( child );
-                        ProcessTexMapChunk(child, m);
+                        ProcessTexMapChunk(child, m, childXml);
 
                         break;
 
                     default:
 
-                        SkipChunk(child);
+                        SkipChunk(child, childXml);
                         break;
                 }
+                if (chunkXml != null)
+                { chunkXml.Add(childXml); }
                 chunk.BytesRead += child.BytesRead;
             }
             materials.Add(name, m);
         }
 
-        void ProcessTexMapChunk(ThreeDSChunk chunk, MaterialD3S m)
+        void ProcessTexMapChunk(ThreeDSChunk chunk, MaterialD3S m, XElement chunkXml)
         {
             while (chunk.BytesRead < chunk.Length)
             {
                 ThreeDSChunk child = new ThreeDSChunk(reader);
+                XElement childXml = null;
+                if (chunkXml != null)
+                {
+                    childXml = new XElement(
+                        "_" + ((ChunkType)child.ID).ToString(),
+                        new XAttribute("Length", child.Length));
+                }
                 switch ((ChunkType)child.ID)
                 {
                     case ChunkType.MappingFilename:
 
-                        string name = ProcessString(child);
+                        string name = ProcessString(child, childXml);
 
                         Bitmap bmp;
                         try
@@ -232,115 +299,153 @@ namespace bitzhuwei._3DS
 
                     default:
 
-                        SkipChunk(child, (int)(chunk.Length - chunk.BytesRead - child.BytesRead));
+                        SkipChunk(child, childXml, (int)(chunk.Length - chunk.BytesRead - child.BytesRead));
                         break;
 
                 }
+                if (chunkXml != null)
+                { chunkXml.Add(childXml); }
                 chunk.BytesRead += child.BytesRead;
             }
         }
 
-        float[] ProcessColorChunk(ThreeDSChunk chunk)
+        float[] ProcessColorChunk(ThreeDSChunk chunk, XElement chunkXml)
         {
             ThreeDSChunk child = new ThreeDSChunk(reader);
             float[] c = new float[] { (float)reader.ReadByte() / 256, (float)reader.ReadByte() / 256, (float)reader.ReadByte() / 256 };
             chunk.BytesRead += (int)child.Length;
+            if (chunkXml != null)
+            {
+                chunkXml.Add(new XAttribute("r", c[0]),
+                    new XAttribute("g", c[1]),
+                    new XAttribute("b", c[2]));
+            }
             return c;
         }
 
-        int ProcessPercentageChunk(ThreeDSChunk chunk)
+        int ProcessPercentageChunk(ThreeDSChunk chunk, XElement chunkXml)
         {
             ThreeDSChunk child = new ThreeDSChunk(reader);
             int per = reader.ReadUInt16();
             child.BytesRead += 2;
             chunk.BytesRead += child.BytesRead;
+
+            if (chunkXml != null)
+            { chunkXml.Add(new XAttribute("per", per)); }
             return per;
         }
 
-        Entity ProcessObjectChunk(ThreeDSChunk chunk)
+        Entity ProcessObjectChunk(ThreeDSChunk chunk, XElement chunkXml)
         {
-            return ProcessObjectChunk(chunk, new Entity());
+            return ProcessObjectChunk(chunk, new Entity(), chunkXml);
         }
 
-        Entity ProcessObjectChunk(ThreeDSChunk chunk, Entity e)
+        Entity ProcessObjectChunk(ThreeDSChunk chunk, Entity e, XElement chunkXml)
         {
             while (chunk.BytesRead < chunk.Length)
             {
                 ThreeDSChunk child = new ThreeDSChunk(reader);
-
+                XElement childXml = null;
+                if (chunkXml != null)
+                {
+                    childXml = new XElement(
+                        "_" + ((ChunkType)child.ID).ToString(),
+                        new XAttribute("Length", child.Length));
+                }
                 switch ((ChunkType)child.ID)
                 {
                     case ChunkType.TriangularMesh:
+                        ProcessObjectChunk(child, e, childXml);
 
-                        ProcessObjectChunk(child, e);
                         break;
 
                     case ChunkType.VerticesList:
 
-                        e.vertices = ReadVertices(child);
+                        e.vertices = ReadVertices(child, childXml);
                         break;
 
                     case ChunkType.FacesDescription:
 
-                        e.indices = ReadIndices(child);
+                        e.indices = ReadIndices(child, childXml);
 
                         if (child.BytesRead < child.Length)
-                            ProcessObjectChunk(child, e);
+                            ProcessObjectChunk(child, e, childXml);
                         break;
 
                     case ChunkType.FacesMaterial:
 
-                        string name2 = ProcessString(child);
+                        string name2 = ProcessString(child, childXml);
 
                         MaterialD3S mat;
                         if (materials.TryGetValue(name2, out mat))
                             e.material = mat;
 
-                        SkipChunk(child);
+                        SkipChunk(child, childXml);
                         break;
 
                     case ChunkType.MappingCoordinatesList:
 
-                        int cnt = reader.ReadUInt16();
-                        child.BytesRead += 2;
-
-                        e.texcoords = new TexCoord[cnt];
-                        for (int ii = 0; ii < cnt; ii++)
-                            e.texcoords[ii] = new TexCoord(reader.ReadSingle(), reader.ReadSingle());
-
-                        child.BytesRead += (cnt * (4 * 2));
+                        ReadTexCoord(child, e, childXml);
 
                         break;
 
                     default:
 
-                        SkipChunk(child);
+                        SkipChunk(child, childXml);
                         break;
 
+                }
+                if (chunkXml != null)
+                {
+                    chunkXml.Add(childXml);
                 }
                 chunk.BytesRead += child.BytesRead;
             }
             return e;
         }
 
-        void SkipChunk(ThreeDSChunk chunk, int maxSkip=-1)
+        private void ReadTexCoord(ThreeDSChunk chunk, Entity e, XElement chunkXml)
+        {
+            int cnt = reader.ReadUInt16();
+            chunk.BytesRead += 2;
+
+            e.texcoords = new TexCoord[cnt];
+            if (chunkXml != null) { chunkXml.Add(new XElement("TexCoordCount", cnt, new XAttribute("Length", 2))); }
+            for (int ii = 0; ii < cnt; ii++)
+            {
+                e.texcoords[ii] = new TexCoord(reader.ReadSingle(), reader.ReadSingle());
+                if (chunkXml != null)
+                {
+                    chunkXml.Add(new XElement("TexCoord",
+                      new XAttribute("Length", "8"),
+                      e.texcoords[ii].ToString()));
+                }
+            }
+
+            chunk.BytesRead += (cnt * (4 * 2));
+        }
+
+        void SkipChunk(ThreeDSChunk chunk, XElement chunkXml, int maxSkip = -1)
         {
             int length = (int)chunk.Length - chunk.BytesRead;
             if (maxSkip != -1)
             {
                 if (length > maxSkip)//Something wrong about 3ds file may happen here.
                 {
-                    length = maxSkip; 
+                    length = maxSkip;
                 }
             }
             reader.ReadBytes(length);
+            if (chunkXml != null)
+            {
+                chunkXml.Add(new XAttribute("Skip", length));
+            }
             chunk.BytesRead += length;
         }
 
-        string ProcessString(ThreeDSChunk chunk)
+        string ProcessString(ThreeDSChunk chunk, XElement chunkXml)
         {
             StringBuilder sb = new StringBuilder();
-
             byte b = reader.ReadByte();
             int idx = 0;
             while (b != 0)
@@ -351,15 +456,20 @@ namespace bitzhuwei._3DS
             }
             chunk.BytesRead += idx + 1;
 
-            return sb.ToString();
+            var str = sb.ToString();
+            if (chunkXml != null)
+            {
+                chunkXml.Add(new XElement("String", str, new XAttribute("Length", idx + 1)));
+            }
+            return str;
         }
 
-        Vector[] ReadVertices(ThreeDSChunk chunk)
+        Vector[] ReadVertices(ThreeDSChunk chunk, XElement chunkXml)
         {
             ushort numVerts = reader.ReadUInt16();
             chunk.BytesRead += 2;
             Vector[] verts = new Vector[numVerts];
-
+            if (chunkXml != null) { chunkXml.Add(new XElement("numVerts", numVerts, new XAttribute("Length", 2))); }
             for (int ii = 0; ii < verts.Length; ii++)
             {
                 float f1 = reader.ReadSingle();
@@ -367,6 +477,13 @@ namespace bitzhuwei._3DS
                 float f3 = reader.ReadSingle();
 
                 verts[ii] = new Vector(f1, f3, -f2);
+                if (chunkXml != null)
+                {
+                    chunkXml.Add(
+                        new XElement("Vector", verts[ii].ToString(),
+                            new XAttribute("Length", "12"))
+                        );
+                }
             }
 
             chunk.BytesRead += verts.Length * (3 * 4);
@@ -374,9 +491,10 @@ namespace bitzhuwei._3DS
             return verts;
         }
 
-        Triangle[] ReadIndices(ThreeDSChunk chunk)
+        Triangle[] ReadIndices(ThreeDSChunk chunk, XElement chunkXml)
         {
             ushort numIdcs = reader.ReadUInt16();
+            if (chunkXml != null) { chunkXml.Add(new XElement("numIndices", numIdcs, new XAttribute("Length", 2))); }
             chunk.BytesRead += 2;
             Triangle[] idcs = new Triangle[numIdcs];
 
@@ -384,10 +502,17 @@ namespace bitzhuwei._3DS
             {
                 idcs[ii] = new Triangle(reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16());
                 reader.ReadUInt16();
+                if (chunkXml != null)
+                {
+                    chunkXml.Add(new XElement(
+                      "triIndex", idcs[ii].ToString(),
+                      new XAttribute("Length", "8")));
+                }
             }
             chunk.BytesRead += (2 * 4) * idcs.Length;
             return idcs;
         }
+
 
     }
 }
